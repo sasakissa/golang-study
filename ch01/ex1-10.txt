@@ -1,0 +1,5 @@
+0.04s     336 http://abehiroshi.la.coocan.jp/
+0.04s     336 http://abehiroshi.la.coocan.jp/
+0.05s     336 http://abehiroshi.la.coocan.jp/
+0.03s     336 http://abehiroshi.la.coocan.jp/
+Get http://lpcalhost:8000/help: dial tcp: lookup lpcalhost: no such host
