@@ -6,6 +6,7 @@ import (
 	"os"
 )
 
+// todo: 動作確認
 func main() {
 	counts := make(map[string]int)
 	parents := make(map[string][]string)

@@ -23,11 +23,7 @@ func main() {
 			fmt.Fprintf(os.Stderr, "fetch: reading %s: %v\n", url, err)
 			os.Exit(1)
 		}
-		_, err = io.Copy(os.Stdout, resp.Body)
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "fetch reading %s: %v \n", url, err)
-			os.Exit(1)
-		}
+		fmt.Fprintf(os.Stdout, "status: %v\n", resp.Status)
 		resp.Body.Close()
 	}
 }

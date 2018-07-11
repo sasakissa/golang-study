@@ -5,21 +5,21 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
-	"os"
 	"time"
+
+	"./getargs"
 )
 
-// todo: ちゃんと課題をやる
-// diffの確認とキャッシュの有無
 func main() {
 	start := time.Now()
 	ch := make(chan string)
-	file, _ := os.OpenFile("./ex1-10.txt", os.O_WRONLY|os.O_APPEND, 0666)
-	for _, url := range os.Args[1:] {
+	urlList := getargs.GetArgs()
+
+	for _, url := range urlList {
 		go fetch(url, ch)
 	}
-	for range os.Args[1:] {
-		fmt.Fprintln(file, <-ch)
+	for range urlList {
+		fmt.Println(<-ch)
 	}
 	fmt.Printf("%.2fs elapsed \n", time.Since(start).Seconds())
 }
@@ -29,6 +29,7 @@ func fetch(url string, ch chan<- string) {
 	resp, err := http.Get(url)
 	if err != nil {
 		ch <- fmt.Sprint(err)
+		return
 	}
 
 	nbytes, err := io.Copy(ioutil.Discard, resp.Body)
