@@ -8,7 +8,7 @@ import (
 	"strings"
 )
 
-func main9() {
+func main() {
 	for _, url := range os.Args[1:] {
 		if !strings.HasPrefix(url, "http://") {
 			url = "http://" + url

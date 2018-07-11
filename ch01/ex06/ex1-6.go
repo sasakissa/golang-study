@@ -11,7 +11,7 @@ import (
 	"time"
 )
 
-func main6() {
+func main() {
 	rand.Seed(time.Now().UTC().UnixNano())
 	lissajousColor(os.Stdout)
 }

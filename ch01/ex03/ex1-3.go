@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func main3() {
+func main() {
 	start := time.Now()
 	var s string
 	for i := 0; i < len(os.Args); i++ {

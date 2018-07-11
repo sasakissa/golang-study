@@ -9,7 +9,7 @@ import (
 	"time"
 )
 
-func main10() {
+func main() {
 	start := time.Now()
 	ch := make(chan string)
 	file, _ := os.OpenFile("./ex1-10.txt", os.O_WRONLY|os.O_APPEND, 0666)

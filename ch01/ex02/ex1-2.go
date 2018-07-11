@@ -6,7 +6,7 @@ import (
 	"strconv"
 )
 
-func main2() {
+func main() {
 	for i := 0; i < len(os.Args); i++ {
 		var s string
 		s += strconv.Itoa(i)

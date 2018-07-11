@@ -19,7 +19,7 @@ const (
 	greenIndex = 1
 )
 
-func main5() {
+func main() {
 	rand.Seed(time.Now().UTC().UnixNano())
 	lissajous(os.Stdout)
 }

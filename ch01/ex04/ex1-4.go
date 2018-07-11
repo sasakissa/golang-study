@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-func main4() {
+func main() {
 	counts := make(map[string]int)
 	parents := make(map[string][]string)
 	files := os.Args[1:]
