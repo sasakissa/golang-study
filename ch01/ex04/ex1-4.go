@@ -6,7 +6,6 @@ import (
 	"os"
 )
 
-// todo: 動作確認
 func main() {
 	counts := make(map[string]int)
 	parents := make(map[string][]string)
@@ -24,6 +23,7 @@ func main() {
 			f.Close()
 		}
 	}
+
 	for line, n := range counts {
 		if n > 1 {
 			fmt.Printf("%d\t%s\n", n, line)

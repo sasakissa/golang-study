@@ -31,7 +31,6 @@ func fetch(url string, ch chan<- string) {
 		ch <- fmt.Sprint(err)
 		return
 	}
-
 	nbytes, err := io.Copy(ioutil.Discard, resp.Body)
 	resp.Body.Close()
 	if err != nil {

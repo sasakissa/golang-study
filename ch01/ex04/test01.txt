@@ -1,0 +1,6 @@
+I like dog
+I like cat
+I like lion
+I like tiger
+I like bunny
+I like python

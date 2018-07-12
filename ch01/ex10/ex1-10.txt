@@ -3,3 +3,37 @@
 0.05s     336 http://abehiroshi.la.coocan.jp/
 0.03s     336 http://abehiroshi.la.coocan.jp/
 Get http://lpcalhost:8000/help: dial tcp: lookup lpcalhost: no such host
+0.23s     336 http://abehiroshi.la.coocan.jp/
+0.04s     336 http://abehiroshi.la.coocan.jp/
+0.03s     336 http://abehiroshi.la.coocan.jp/
+Get first-content.txt: unsupported protocol scheme ""
+Get second-content.txt: unsupported protocol scheme ""
+Get first-content.txt: unsupported protocol scheme ""
+Get second-content.txt: unsupported protocol scheme ""
+Get first-content.txt: unsupported protocol scheme ""
+Get second-content.txt: unsupported protocol scheme ""
+Get first-content.txt: unsupported protocol scheme ""
+Get second-content.txt: unsupported protocol scheme ""
+Get first-content.txt: unsupported protocol scheme ""
+Get first-content.txt: unsupported protocol scheme ""
+Get second-content.txt: unsupported protocol scheme ""
+Get first-content.txt: unsupported protocol scheme ""
+Get second-content.txt: unsupported protocol scheme ""
+Get first-content.txt: unsupported protocol scheme ""
+Get second-content.txt: unsupported protocol scheme ""
+Get first-content.txt: unsupported protocol scheme ""
+Get second-content.txt: unsupported protocol scheme ""
+Get first-content.txt: unsupported protocol scheme ""
+Get second-content.txt: unsupported protocol scheme ""
+Get first-content.txt: unsupported protocol scheme ""
+Get second-content.txt: unsupported protocol scheme ""
+Get first-content.txt: unsupported protocol scheme ""
+Get second-content.txt: unsupported protocol scheme ""
+Get first-content.txt: unsupported protocol scheme ""
+Get second-content.txt: unsupported protocol scheme ""
+0.19s     336 http://abehiroshi.la.coocan.jp/
+0.09s     336 http://abehiroshi.la.coocan.jp/
+0.03s     336 http://abehiroshi.la.coocan.jp/
+0.03s     336 http://abehiroshi.la.coocan.jp/
+0.06s     336 http://abehiroshi.la.coocan.jp/
+0.03s     336 http://abehiroshi.la.coocan.jp/
