@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"image"
 	"image/color"
 	"image/gif"
@@ -12,7 +11,12 @@ import (
 	"time"
 )
 
-var palette = []color.Color{color.Black, color.RGBA{0x00, 0x78, 0x00, 0xff}}
+var palette = []color.Color{
+	color.Black,
+	color.RGBA{0, 0xff, 0, 0xff},
+	color.RGBA{0, 0, 0xff, 0xff},
+	color.RGBA{0xff, 0, 0, 0xff},
+}
 
 const (
 	blackIndex = 0
@@ -38,7 +42,6 @@ func lissajous(out io.Writer) {
 	for i := 0; i < nframes; i++ {
 		rect := image.Rect(0, 0, 2*size+1, 2*size+1)
 		img := image.NewPaletted(rect, palette)
-		fmt.Println(img)
 		for t := 0.0; t < cycles*2*math.Pi; t += res {
 			x := math.Sin(t)
 			y := math.Sin(t*freq + phase)

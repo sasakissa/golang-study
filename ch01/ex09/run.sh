@@ -1,0 +1,1 @@
+go run ex1-9.go https://github.com/tmorimatsu/golang_study_first/blob/master/README.md https://github.com/tmorimatsu/golang_study_first
