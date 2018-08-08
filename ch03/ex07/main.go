@@ -20,7 +20,6 @@ func main() {
 			x := float64(px)/width*(xmax-xmin) + xmin
 			z := complex(x, y)
 			// 画像の店(px, py) は複素数ｚを表している
-
 			img.Set(px, py, z2color(z))
 		}
 	}
@@ -28,23 +27,23 @@ func main() {
 }
 
 func z2color(z complex128) color.Color {
-	const iterations = 25500
-	const thres = 0.1
+	const iterations = 255
+	const thres float64 = 0.00000000000000000000000005
 
 	v := z
 	for n := 0; n < iterations; n++ {
 		v = newton(v)
 		if cmplx.Abs(v-complex(1, 0)) < thres {
-			return color.RGBA{uint8(255 - n/100), 0, 0, 255}
+			return color.RGBA{uint8(255 - n), 0, 0, 255}
 		}
 		if cmplx.Abs(v-complex(-1, 0)) < thres {
-			return color.RGBA{0, uint8(255 - n/100), 0, 255}
+			return color.RGBA{0, uint8(255 - n), 0, 255}
 		}
 		if cmplx.Abs(v-complex(0, 1)) < thres {
-			return color.RGBA{0, 0, uint8(255 - n/100), 255}
+			return color.RGBA{0, 0, uint8(255 - n), 255}
 		}
 		if cmplx.Abs(v-complex(0, -1)) < thres {
-			return color.RGBA{uint8(255 - n/100), uint8(255 - n/100), 122, 255}
+			return color.RGBA{uint8(255 - n), uint8(255 - n/100), 122, 255}
 		}
 
 	}

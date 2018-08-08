@@ -38,9 +38,6 @@ func mandelbrot(z complex128) color.Color {
 		if cmplx.Abs(v) > 2 {
 			return color.YCbCr{255 - n*contrast, 255, 0}
 		}
-		if cmplx.Abs(v) > 1 {
-			return color.YCbCr{255 - n*contrast, 0, 255}
-		}
 	}
 	return color.Black
 }
