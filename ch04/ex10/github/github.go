@@ -1,6 +1,7 @@
 package github
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -10,10 +11,15 @@ import (
 )
 
 const IssuesURL = "https://api.github.com/search/issues"
+const endpointURL = "https://api.github.com/"
 
 type IssuesSearchResult struct {
 	TotalCount int `json:"total_count"`
 	Items      []*Issue
+}
+
+type IssueCreateResult struct {
+	Item Issue
 }
 
 type Issue struct {
@@ -60,6 +66,32 @@ func SearchIssues(terms []string) (*IssuesSearchResult, error) {
 	}
 
 	var result IssuesSearchResult
+	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
+		resp.Body.Close()
+		return nil, err
+	}
+	resp.Body.Close()
+	return &result, nil
+}
+
+func CreateIssue(issue Issue) (*IssueCreateResult, error) {
+	jsonIssue, err := json.Marshal(issue)
+	if err != nil {
+		fmt.Println("JSON Marshal Err: ", err)
+		return nil, err
+	}
+	resp, err := http.Post(
+		endpointURL+"repos/sasakissa/golang-study",
+		"application/json",
+		bytes.NewBuffer(jsonIssue),
+	)
+
+	if resp.StatusCode != http.StatusOK {
+		resp.Body.Close()
+		return nil, err
+	}
+
+	var result IssueCreateResult
 	if err := json.NewDecoder(resp.Body).Decode(&result); err != nil {
 		resp.Body.Close()
 		return nil, err
