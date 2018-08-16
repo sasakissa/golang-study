@@ -27,14 +27,10 @@ type Issue struct {
 	User      *User
 	CreatedAt time.Time `json:"created_at"`
 	Body      string    // in Markdown format
-	Milestone *Milestone
 }
 
-type Milestone struct {
-	Title       string
-	HTMLURL     string
-	Description string
-	State       string
+func (i Issue) CacheURL() string {
+	return fmt.Sprintf("/issues/%d", i.Number)
 }
 
 type User struct {

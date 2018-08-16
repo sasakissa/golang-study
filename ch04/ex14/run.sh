@@ -1,1 +1,1 @@
-go run main.go > issue.html
+go run main.go golang go
