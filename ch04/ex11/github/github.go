@@ -12,7 +12,7 @@ import (
 )
 
 const IssuesURL = "https://api.github.com/search/issues"
-const endpointURL = "https://api.github.com/"
+const endpointURL = "https://api.github.com"
 
 type IssuesSearchResult struct {
 	TotalCount int `json:"total_count"`
@@ -115,6 +115,7 @@ func GetIssues(owner string, repo string) ([]Issue, error) {
 	return issue, nil
 }
 
+// todo: ２段階認証が突破できない
 func EditIssue(owner, repo, issueNum string, fields map[string]string) (*Issue, error) {
 	buf := &bytes.Buffer{}
 	encoder := json.NewEncoder(buf)
@@ -124,9 +125,9 @@ func EditIssue(owner, repo, issueNum string, fields map[string]string) (*Issue, 
 	}
 
 	client := &http.Client{}
-	url := strings.Join([]string{endpointURL, "repos", owner, repo, "issue", issueNum}, "/")
+	url := strings.Join([]string{endpointURL, "repos", owner, repo, "issues", issueNum}, "/")
 	request, err := http.NewRequest("PATCH", url, buf)
-	request.SetBasicAuth(os.Getenv("GITHUB_USER"), os.Getenv("GITHUB_PATH"))
+	request.SetBasicAuth(os.Getenv("GITHUB_USER"), os.Getenv("GITHUB_PASS"))
 	if err != nil {
 		return nil, err
 	}

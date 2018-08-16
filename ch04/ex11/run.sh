@@ -1,1 +1,1 @@
-go run main.go repo: golang/go is:open json decoder
+go run main.go "close" sasakissa golang-study "1"
