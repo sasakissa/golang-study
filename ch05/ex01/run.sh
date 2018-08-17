@@ -1,0 +1,1 @@
+./fetch https://golang.org | ./main
