@@ -26,6 +26,10 @@ func breadthFirst(f func(item string) []string, worklist []string) {
 
 // crawlを改良し、見つけたページの複製をローカルに作成する
 // 異なるドメインのページは複製しない
+// todo:
+// ドメイン判定入れる
+// 画像データとかも保管できるようにする
+
 func crawl(url string) []string {
 	fmt.Println(url)
 
@@ -40,29 +44,39 @@ func crawl(url string) []string {
 		return nil
 	}
 
-	// 複製する
-	err = copyPage(resp)
+	doc, err := html.Parse(resp.Body)
 	if err != nil {
-		log.Print(err)
+		return nil
 	}
 
 	// リンクをたどる
-	list, err := Extract(resp)
+	list, err := Extract(resp, doc)
 	if err != nil {
 		log.Print(err)
 	}
+
+	// 複製する
+	err = copyPage(resp, doc)
+	if err != nil {
+		log.Print(err)
+	}
+
+	defer resp.Body.Close()
+
 	return list
 }
 
-func copyPage(resp *http.Response) error {
-	doc, err := html.Parse(resp.Body)
-	resp.Body.Close()
-	if err != nil {
-		return err
+func copyPage(resp *http.Response, doc *html.Node) error {
+
+	dirname := "./" + resp.Request.URL.Host + resp.Request.URL.Path
+	if len(resp.Request.URL.Path) == 0 {
+		dirname += "/"
 	}
 
-	fmt.Println(strings.Join([]string{"./", resp.Request.URL.Path}, ""))
-	file, err := os.Create("./sample.html")
+	if err := os.MkdirAll(dirname, 0777); err != nil {
+		log.Fatal(err)
+	}
+	file, err := os.Create(dirname + "index.html")
 	if err != nil {
 		return err
 	}
@@ -87,7 +101,6 @@ func outline(n *html.Node) ([]string, error) {
 	startElement = func(n *html.Node) {
 		// テキストノード
 		if n.Type == html.TextNode && len(strings.Fields(n.Data)) > 0 { // 空白のみのテキストは無視
-			// todo: がんばってstringにして突っ込む
 			text := strings.Repeat(" ", depth*2) + strings.Replace(n.Data, "\n", "\n"+strings.Repeat(" ", depth*2), -1)
 			texts = append(texts, text+"\n")
 		}
@@ -97,7 +110,6 @@ func outline(n *html.Node) ([]string, error) {
 			// 属性を書く
 			texts = append(texts, strings.Repeat(" ", depth*2)+"<"+n.Data)
 			for _, attr := range n.Attr {
-				// todo: がんばってstringにして突っ込む
 				text := " " + attr.Key + "='" + attr.Val + "' "
 				texts = append(texts, text)
 			}
@@ -118,13 +130,7 @@ func outline(n *html.Node) ([]string, error) {
 	return texts, nil
 }
 
-func Extract(resp *http.Response) ([]string, error) {
-	doc, err := html.Parse(resp.Body)
-	resp.Body.Close()
-	if err != nil {
-		log.Print("parsing error: %v", err)
-		return nil, nil
-	}
+func Extract(resp *http.Response, doc *html.Node) ([]string, error) {
 
 	var links []string
 	visitNode := func(n *html.Node) {
@@ -137,10 +143,18 @@ func Extract(resp *http.Response) ([]string, error) {
 				if err != nil {
 					continue // ignore bad URLs
 				}
+				// domain外かどうかの判断
+				domain := resp.Request.URL.Host
+				linkDomain := link.Host
+				fmt.Println(linkDomain)
+				if domain != linkDomain {
+					continue
+				}
 				links = append(links, link.String())
 			}
 		}
 	}
+
 	forEachNode(doc, visitNode, nil)
 	return links, nil
 }
@@ -158,6 +172,5 @@ func forEachNode(n *html.Node, pre, post func(n *html.Node)) {
 }
 
 func main() {
-
 	breadthFirst(crawl, os.Args[1:])
 }
