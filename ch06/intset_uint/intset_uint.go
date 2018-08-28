@@ -5,21 +5,24 @@ import (
 	"fmt"
 )
 
+// 課題6.5 uintを使うようにプログラムを修正する
 type IntSet struct {
-	words []uint64
+	words []uint
 }
 
+const CPU_BIT = 32 << (^uint(0) >> 63)
+
 func (s *IntSet) Has(x int) bool {
-	word, bit := x/64, uint(x%64)
-	return word < len(s.words) && s.words[word]&(1<<bit) != 0
+	word, CPU_BIT := x/CPU_BIT, uint(x%CPU_BIT)
+	return word < len(s.words) && s.words[word]&(1<<CPU_BIT) != 0
 }
 
 func (s *IntSet) Add(x int) {
-	word, bit := x/64, uint(x%64)
+	word, CPU_BIT := x/CPU_BIT, uint(x%CPU_BIT)
 	for word >= len(s.words) {
 		s.words = append(s.words, 0)
 	}
-	s.words[word] |= 1 << bit
+	s.words[word] |= 1 << CPU_BIT
 }
 
 func (s *IntSet) UnionWith(t *IntSet) {
@@ -39,12 +42,12 @@ func (s *IntSet) String() string {
 		if word == 0 {
 			continue
 		}
-		for j := 0; j < 64; j++ {
+		for j := 0; j < CPU_BIT; j++ {
 			if word&(1<<uint(j)) != 0 {
 				if buf.Len() > len("{") {
 					buf.WriteByte(' ')
 				}
-				fmt.Fprintf(&buf, "%d", 64*i+j)
+				fmt.Fprintf(&buf, "%d", CPU_BIT*i+j)
 			}
 		}
 	}
@@ -52,10 +55,9 @@ func (s *IntSet) String() string {
 	return buf.String()
 }
 
-// 課題6.1
 func (s *IntSet) Len() int {
-	var popCount func(p uint64) int
-	popCount = func(p uint64) int {
+	var popCount func(p uint) int
+	popCount = func(p uint) int {
 		cnt := 0
 		for p > 0 {
 			p = p & (p - 1)
@@ -70,37 +72,32 @@ func (s *IntSet) Len() int {
 	return cnt
 }
 
-//　課題6.1
 func (s *IntSet) Remove(x int) {
-	word, bit := x/64, uint64(x%64)
+	word, CPU_BIT := x/CPU_BIT, uint(x%CPU_BIT)
 	if !s.Has(x) {
 		fmt.Printf("There is no %s", x)
 		return
 	}
 
-	s.words[word] ^= (1 << bit)
+	s.words[word] ^= (1 << CPU_BIT)
 }
 
-// 課題6.1
 func (s *IntSet) Clear() {
-	s.words = []uint64{}
+	s.words = []uint{}
 }
 
-// 課題6.1
 func (s *IntSet) Copy() *IntSet {
 	copiedS := IntSet{}
 	copy(s.words, copiedS.words)
 	return &copiedS
 }
 
-// 課題6.2 可変個引数対応
 func (s *IntSet) AddAll(nums ...int) {
 	for _, num := range nums {
 		s.Add(num)
 	}
 }
 
-// 課題6.3 積集合
 func (s *IntSet) IntersectWith(t *IntSet) {
 	for i, word := range t.words {
 		if i < len(s.words) {
@@ -109,7 +106,6 @@ func (s *IntSet) IntersectWith(t *IntSet) {
 	}
 }
 
-// 課題6.3 差集合
 func (s *IntSet) DifferenceWith(t *IntSet) {
 	for i, word := range t.words {
 		if i < len(s.words) {
@@ -118,7 +114,6 @@ func (s *IntSet) DifferenceWith(t *IntSet) {
 	}
 }
 
-// 課題6.3 対象差集合
 func (s *IntSet) SymmetricDifference(t *IntSet) {
 	for i, word := range t.words {
 		if i < len(s.words) {
@@ -129,16 +124,15 @@ func (s *IntSet) SymmetricDifference(t *IntSet) {
 	}
 }
 
-// 課題6.4
 func (s *IntSet) Elems() []int {
 	var elems []int
 	for i, word := range s.words {
 		if word == 0 {
 			continue
 		}
-		for j := 0; j < 64; j++ {
+		for j := 0; j < CPU_BIT; j++ {
 			if word&(1<<uint(j)) != 0 {
-				elems = append(elems, 64*i+j)
+				elems = append(elems, CPU_BIT*i+j)
 
 			}
 		}
