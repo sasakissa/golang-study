@@ -1,1 +1,1 @@
-go run main.go https://golang.org
+go run main.go

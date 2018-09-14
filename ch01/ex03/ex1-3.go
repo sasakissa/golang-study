@@ -18,7 +18,7 @@ func main() {
 	fmt.Println(end.Sub(start).Nanoseconds(), "ns")
 
 	start = time.Now()
-	fmt.Println(strings.Join(os.Args[0:], " "))
+	fmt.Println(strings.Join(os.Args[0:], ""))
 	end = time.Now()
 	fmt.Println(end.Sub(start).Nanoseconds(), "ns")
 

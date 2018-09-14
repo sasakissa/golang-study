@@ -4,6 +4,7 @@ var pc [256]byte
 
 func init() {
 	// 8bitの取りうる全ての値のpopulation countを準備している
+	// 右シフトした結果 + 最下桁が立ってるかだけ見る
 	for i := range pc {
 		pc[i] = pc[i/2] + byte(i&1)
 	}
