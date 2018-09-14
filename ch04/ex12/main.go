@@ -30,7 +30,7 @@ func main() {
 
 	if err != nil {
 		titleCommicMap = map[string]StoredCommicInfo{}
-		// 並列化したい
+		// 並列化し
 		for i := 0; i < 2500; i++ {
 			commicInfo, err := getCommicInfo(string(i))
 			if err != nil {
