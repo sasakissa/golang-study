@@ -1,12 +1,11 @@
 package main
 
 import (
+	"bufio"
 	"flag"
 	"fmt"
-	"io"
 	"log"
 	"net"
-	"os"
 	"regexp"
 )
 
@@ -18,10 +17,14 @@ func main() {
 		m = handleArg(m, arg)
 	}
 
+	i := 0
 	for city, host := range m {
-		go handleDial(city, host)
+		go handleDial(city, host, i)
+		i++
 	}
+	for {
 
+	}
 }
 
 func handleArg(m map[string]string, arg string) map[string]string {
@@ -34,20 +37,23 @@ func handleArg(m map[string]string, arg string) map[string]string {
 	return m
 }
 
-func handleDial(city string, host string) {
+func handleDial(city string, host string, index int) {
 	conn, err := net.Dial("tcp", host)
 	if err != nil {
 		log.Fatal(err)
 	}
 
 	defer conn.Close()
-	fmt.Printf("%s\t", city)
-	mustCopy(os.Stdout, conn)
-	fmt.Println()
+	fmt.Printf("%s:%s\n", city, host)
+	s := bufio.NewScanner(conn)
+	for s.Scan() {
+		fmt.Printf("%s\t%s\n", city, s.Text())
+	}
+
 }
 
-func mustCopy(dst io.Writer, src io.Reader) {
-	if _, err := io.Copy(dst, src); err != nil {
-		log.Fatal(err)
-	}
-}
+// func mustCopy(dst io.Writer, src io.Reader) {
+// 	if _, err := io.Copy(dest, src); err != nil {
+// 		log.Fatal(err)
+// 	}
+// }
