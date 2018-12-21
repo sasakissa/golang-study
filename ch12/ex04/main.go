@@ -43,18 +43,22 @@ func main() {
 type printer struct {
 	buf    bytes.Buffer
 	indent int
+	stack  []int
 }
 
-func (p *printer) Push() {
-	p.indent += 1
+func (p *printer) Push(indent int) {
+	p.stack = append(p.stack, indent)
+	p.indent += indent
 }
 
 func (p *printer) Pop() {
-	p.indent -= 1
+	last := p.stack[len(p.stack)-1]
+	p.stack = p.stack[:len(p.stack)-1]
+	p.indent -= last
 }
 
 func (p *printer) PrintIndent() {
-	p.buf.WriteString(strings.Repeat("         ", p.indent))
+	p.buf.WriteString(strings.Repeat(" ", p.indent))
 }
 
 func (p *printer) Print(s string) {
@@ -65,7 +69,7 @@ func (p *printer) Print(s string) {
 // Marshal encodes a Go value in S-expression form.
 func Marshal(v interface{}) ([]byte, error) {
 	var buf bytes.Buffer
-	p := printer{buf, 0}
+	p := printer{buf, 0, []int{}}
 	if err := encodeIndent(&p, reflect.ValueOf(v)); err != nil {
 		return nil, err
 	}
@@ -97,7 +101,7 @@ func encodeIndent(p *printer, v reflect.Value) error {
 
 	case reflect.Array, reflect.Slice: // (value ...)
 		p.Print("(")
-		p.Push()
+		p.Push(1)
 		for i := 0; i < v.Len(); i++ {
 			if i > 0 {
 				p.Print("\n")
@@ -111,22 +115,26 @@ func encodeIndent(p *printer, v reflect.Value) error {
 		p.Pop()
 	case reflect.Struct: // ((name value) ...)
 		p.Print("(")
+		p.Push(1)
 		for i := 0; i < v.NumField(); i++ {
 			if i > 0 {
 				p.Print("\n")
 				p.PrintIndent()
 			}
+			p.Push(len(fmt.Sprintf("(%s ", v.Type().Field(i).Name)))
 			p.Print(fmt.Sprintf("(%s ", v.Type().Field(i).Name))
 			if err := encodeIndent(p, v.Field(i)); err != nil {
 				return err
 			}
 			p.Print(")")
+			p.Pop()
 		}
 		p.Print(")")
+		p.Pop()
 
 	case reflect.Map: // ((key value) ...)
 		p.Print("(")
-		p.Push()
+		p.Push(1)
 		for i, key := range v.MapKeys() {
 			if i > 0 {
 				p.Print("\n")
@@ -150,19 +158,17 @@ func encodeIndent(p *printer, v reflect.Value) error {
 		} else {
 			p.Print("nil")
 		}
-	// 課題 12-03
 	case reflect.Float32, reflect.Float64:
 		p.Print(fmt.Sprintf("%g", v.Float()))
 
-	// 課題12-03
 	case reflect.Complex64, reflect.Complex128:
 		c := v.Complex()
 		p.Print(fmt.Sprintf("#C(%g, %g)", real(c), imag(c)))
 
-	// 課題12-02
 	case reflect.Interface:
-		p.Print(fmt.Sprintf("(%q", reflect.Indirect(v).Type()))
-		p.Push()
+		str := fmt.Sprintf("(%q", reflect.Indirect(v).Type())
+		p.Print(str)
+		p.Push(len(str))
 		encodeIndent(p, reflect.Indirect(v).Elem())
 		p.Pop()
 		p.Print(")")
